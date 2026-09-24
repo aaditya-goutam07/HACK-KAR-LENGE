@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surplus-to-Shelter — NGO Dispatch</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>NGO / Shelter Dispatch</h1>
+    <p>Accept donations, assign drivers, track pickups.</p>
+    <nav><a href="index.html">← Donor view</a></nav>
+  </header>
+
+  <main>
+    <section id="list-section">
+      <h2>Incoming Donations (live)</h2>
+      <div id="ngo-donation-list"></div>
+    </section>
+
+    <section id="dashboard-section">
+      <h2>Impact So Far</h2>
+      <p>Meals Rescued: <span id="ngo-meals-count">0</span></p>
+    </section>
+  </main>
+
+  <script type="module" src="ngo.js"></script>
+</body>
+</html>

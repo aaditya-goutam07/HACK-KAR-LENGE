@@ -64,3 +64,25 @@ form button:hover {
 .donation-card h3 {
   color: #2e7d32;
 }
+
+.donation-card button {
+  margin-top: 8px;
+  width: auto;
+  padding: 8px 14px;
+}
+
+.donation-card input {
+  width: auto;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+header nav {
+  margin-top: 10px;
+}
+
+header nav a {
+  color: white;
+  text-decoration: underline;
+  font-weight: bold;
+}
