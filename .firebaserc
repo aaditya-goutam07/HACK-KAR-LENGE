@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "surplus-to-shelter-719fc"
-  }
+  },
+  "targets": {
+    "surplus-to-shelter-719fc": {
+      "hosting": {
+        "ngo": [
+          "surplus-to-shelter-ngo"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

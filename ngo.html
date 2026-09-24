@@ -1,20 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Surplus-to-Shelter — Dispatch</title>
+  <meta name="description" content="Real-time food rescue: connect surplus food donors, shelters and volunteer drivers.">
+  <meta property="og:title" content="Surplus-to-Shelter">
+  <meta property="og:description" content="Turn unsold food into someone's next meal. Post, match, dispatch and track food rescue in real time.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#14532d">
+  <script src="theme.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="style.css">
+  <title>Surplus-to-Shelter — Dispatch</title>
 </head>
 <body>
-  <header class="topbar"><div class="brand"><span class="brand-icon">🏠</span><div><h1>NGO / Shelter Dispatch</h1><p>Match, dispatch and track time-sensitive food rescue.</p></div></div><a class="pill-link" href="index.html">← Donor view</a></header>
+  <header class="topbar">
+    <div class="brand"><span class="brand-icon">🏠</span><div><h1>NGO / Shelter Dispatch</h1><p>Match, dispatch and track time-sensitive food rescue.</p></div></div>
+    <div class="topbar-actions"><button class="share-btn" id="share-btn" type="button">🔗 Share</button><button class="theme-switch" id="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Dark mode"><span aria-hidden="true">☀️</span><span class="ts-track"><span class="ts-thumb"></span></span><span aria-hidden="true">🌙</span></button><a class="pill-link" href="index.html">← Donor view</a></div>
+  </header>
   <main>
-    <section class="card hero"><span class="eyebrow">LIVE DISPATCH</span><h2>Keep every pickup visible.</h2><p>Accept a donation, match it to a recipient, assign a driver and share the live route.</p></section>
-    <section class="card"><h2>Incoming Donations <span class="live-dot"></span> Live</h2><div id="ngo-donation-list"></div></section>
-    <section class="card"><h2>Impact So Far</h2><div class="stat-grid"><div class="stat-box"><span class="stat-number" id="ngo-meals-count">0</span><span class="stat-label">Meals Rescued</span></div><div class="stat-box"><span class="stat-number" id="ngo-weight-count">0</span><span class="stat-label">kg Diverted</span></div><div class="stat-box"><span class="stat-number" id="ngo-co2-count">0</span><span class="stat-label">kg CO₂e Avoided*</span></div></div><p class="footnote">*Demo impact estimate for presentation purposes.</p></section>
+    <div class="top-row">
+      <section class="hero card"><span class="eyebrow">LIVE DISPATCH</span><h2>Keep every pickup visible.</h2><p>Accept a donation, match it to a recipient, assign a driver and share the live route.</p></section>
+      <section class="card impact"><h2>Impact so far</h2><div class="stat-grid"><div class="stat-box"><span class="stat-number" id="ngo-meals-count">0</span><span class="stat-label">Meals rescued</span></div><div class="stat-box"><span class="stat-number" id="ngo-weight-count">0</span><span class="stat-label">kg diverted</span></div><div class="stat-box"><span class="stat-number" id="ngo-co2-count">0</span><span class="stat-label">kg CO₂e avoided*</span></div></div><p class="footnote">*Demo impact estimate for presentation purposes.</p></section>
+    </div>
+    <section class="card"><h2>Incoming donations <span class="live-dot"></span> Live</h2><div class="card-grid" id="ngo-donation-list"></div><p class="empty" id="ngo-donation-empty">No donations yet. New posts from donors appear here in real time.</p></section>
   </main>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module" src="ngo.js"></script>

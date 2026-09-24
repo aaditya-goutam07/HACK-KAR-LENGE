@@ -1,40 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Surplus-to-Shelter — Donor</title>
+  <meta name="description" content="Real-time food rescue: connect surplus food donors, shelters and volunteer drivers.">
+  <meta property="og:title" content="Surplus-to-Shelter">
+  <meta property="og:description" content="Turn unsold food into someone's next meal. Post, match, dispatch and track food rescue in real time.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#14532d">
+  <script src="theme.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="style.css">
+  <title>Surplus-to-Shelter — Donor</title>
 </head>
 <body>
   <header class="topbar">
     <div class="brand"><span class="brand-icon">🍲</span><div><h1>Surplus-to-Shelter</h1><p>Turn unsold food into someone's next meal.</p></div></div>
-    <a class="pill-link" href="ngo.html">NGO / Shelter view →</a>
+    <div class="topbar-actions"><button class="share-btn" id="share-btn" type="button">🔗 Share</button><button class="theme-switch" id="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Dark mode"><span aria-hidden="true">☀️</span><span class="ts-track"><span class="ts-thumb"></span></span><span aria-hidden="true">🌙</span></button><a class="pill-link" href="ngo.html">NGO / Shelter view →</a></div>
   </header>
   <main>
-    <section class="hero card">
-      <div><span class="eyebrow">REAL-TIME FOOD RESCUE</span><h2>Rescue surplus before it expires.</h2><p>Post food in under a minute. The rescue network can match, dispatch and track the pickup in real time.</p></div>
-    </section>
-
-    <section class="card" id="donate-section">
-      <h2>Post a Donation</h2>
-      <form id="donation-form">
-        <input type="text" id="food-item" placeholder="Food item (e.g. Pasta, 20 servings)" required>
-        <input type="number" id="quantity" min="1" placeholder="Quantity / meals available" required>
-        <input type="text" id="location" placeholder="Pickup location (address / landmark)" required>
-        <div class="location-row"><button type="button" id="get-location-btn">📍 Use My Current Location</button><span id="location-status" class="location-status">Location not set — needed for routing</span></div>
-        <label class="field-label" for="expiry">Safe-to-donate until</label>
-        <input type="datetime-local" id="expiry" required>
-        <button type="submit" class="primary-btn">Post Donation</button>
-      </form>
-    </section>
-
-    <section class="card"><h2>Live Rescue Queue <span class="live-dot"></span></h2><div id="donation-list"></div></section>
-
-    <section class="card"><h2>Impact So Far</h2><div class="stat-grid"><div class="stat-box"><span class="stat-number" id="meals-count">0</span><span class="stat-label">Meals Rescued</span></div><div class="stat-box"><span class="stat-number" id="weight-count">0</span><span class="stat-label">kg Diverted</span></div><div class="stat-box"><span class="stat-number" id="co2-count">0</span><span class="stat-label">kg CO₂e Avoided*</span></div></div><p class="footnote">*Demo impact estimate for presentation purposes.</p></section>
+    <div class="top-row">
+      <section class="hero card"><span class="eyebrow">REAL-TIME FOOD RESCUE</span><h2>Rescue surplus before it expires.</h2><p>Post food in under a minute. The rescue network can match, dispatch and track the pickup in real time.</p></section>
+      <section class="card impact"><h2>Impact so far</h2><div class="stat-grid"><div class="stat-box"><span class="stat-number" id="meals-count">0</span><span class="stat-label">Meals rescued</span></div><div class="stat-box"><span class="stat-number" id="weight-count">0</span><span class="stat-label">kg diverted</span></div><div class="stat-box"><span class="stat-number" id="co2-count">0</span><span class="stat-label">kg CO₂e avoided*</span></div></div><p class="footnote">*Demo impact estimate for presentation purposes.</p></section>
+    </div>
+    <div class="dash">
+      <aside class="card" id="donate-section">
+        <h2>Post a donation</h2>
+        <form id="donation-form">
+          <input type="text" id="food-item" placeholder="Food item (e.g. Pasta, 20 servings)" required>
+          <input type="number" id="quantity" min="1" placeholder="Quantity / meals available" required>
+          <input type="text" id="location" placeholder="Pickup location (address / landmark)" required>
+          <div class="location-row"><button type="button" id="get-location-btn">📍 Use my current location</button><span id="location-status" class="location-status">Location not set — needed for routing</span></div>
+          <label class="field-label" for="expiry">Safe-to-donate until</label>
+          <input type="datetime-local" id="expiry" required>
+          <button type="submit" class="primary-btn">Post donation</button>
+        </form>
+      </aside>
+      <section class="card"><h2>Live rescue queue <span class="live-dot"></span></h2><div class="card-grid" id="donation-list"></div><p class="empty" id="donation-empty">No donations yet. Post one and it shows up here instantly.</p></section>
+    </div>
   </main>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module" src="script.js"></script>

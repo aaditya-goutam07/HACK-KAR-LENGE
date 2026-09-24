@@ -1,11 +1,10 @@
 import { db, collection, onSnapshot, doc, updateDoc, orderBy, query } from "./firebase-config.js";
+import { esc, countTo, syncCards, drawMap } from "./ui.js";
 const list=document.getElementById('ngo-donation-list');
-const mealsCount=document.getElementById('ngo-meals-count');
-const weightCount=document.getElementById('ngo-weight-count');
-const co2Count=document.getElementById('ngo-co2-count');
+const emptyEl=document.getElementById('ngo-donation-empty');
 const donationsRef=collection(db,'donations');
 const q=query(donationsRef,orderBy('createdAt','desc'));
-const activeWatchers={}; const activeMaps={};
+const activeWatchers={};
 const STATUS_CLASS={Posted:'badge-posted',Accepted:'badge-accepted',Dispatched:'badge-dispatched',Delivered:'badge-delivered'};
 
 const DEMO_RECIPIENTS=[
@@ -15,12 +14,24 @@ const DEMO_RECIPIENTS=[
 ];
 function distanceKm(a,b,c,d){const R=6371,rad=x=>x*Math.PI/180;const x=rad(c-a),y=rad(d-b);const h=Math.sin(x/2)**2+Math.cos(rad(a))*Math.cos(rad(c))*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(h));}
 function bestRecipient(d){ if(d.pickupLat==null||d.pickupLng==null)return null; return DEMO_RECIPIENTS.filter(r=>r.capacity>=Number(d.quantity||0)).map(r=>({...r,distance:distanceKm(d.pickupLat,d.pickupLng,r.lat,r.lng)})).sort((a,b)=>a.distance-b.distance)[0] || null; }
-function routeUrl(aLat,aLng,bLat,bLng){return `https://router.project-osrm.org/route/v1/driving/${aLng},${aLat};${bLng},${bLat}?overview=full&geometries=geojson`;}
-async function renderMap(id,d){const el=document.getElementById(`map-${id}`);if(!el||!window.L)return;if(activeMaps[id])activeMaps[id].remove();const driverLat=d.driverLat??d.pickupLat,driverLng=d.driverLng??d.pickupLng;const map=L.map(el).setView([driverLat,driverLng],14);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);L.marker([d.pickupLat,d.pickupLng]).addTo(map).bindPopup('📍 Pickup');L.marker([driverLat,driverLng]).addTo(map).bindPopup('🚚 Driver');if(d.driverLat!=null&&d.driverLng!=null){try{const res=await fetch(routeUrl(d.pickupLat,d.pickupLng,d.driverLat,d.driverLng));const data=await res.json();if(data.routes?.[0]){const r=data.routes[0];L.geoJSON(r.geometry,{style:{weight:5,opacity:.8}}).addTo(map);const info=document.getElementById(`route-${id}`);if(info)info.textContent=`${(r.distance/1000).toFixed(1)} km · ~${Math.max(1,Math.round(r.duration/60))} min to pickup`;}}catch{}}map.fitBounds([[d.pickupLat,d.pickupLng],[driverLat,driverLng]],{padding:[25,25]});activeMaps[id]=map;}
 
-onSnapshot(q,snapshot=>{list.innerHTML='';let delivered=0,weight=0;snapshot.forEach(ds=>{const d=ds.data(),id=ds.id;if(d.status==='Delivered'){delivered+=Number(d.quantity||0);weight+=Number(d.quantity||0)*.4;}let action='';if(d.status==='Posted')action=`<button class="primary-btn" onclick="acceptDonation('${id}')">Accept & Auto-Match</button>`;else if(d.status==='Accepted')action=`<div class="location-row"><input type="text" id="driver-input-${id}" placeholder="Driver name"><button class="primary-btn inline-btn" onclick="assignDriver('${id}')">Assign Driver</button></div>`;else if(d.status==='Dispatched')action=`<button class="sharing-btn" onclick="toggleSharing('${id}')">${activeWatchers[id]?'🟢 Sharing Live Location — tap to stop':'📍 Start Sharing Live Location'}</button><button class="primary-btn" onclick="markDelivered('${id}')">Mark as Delivered</button>`;const card=document.createElement('div');card.className='donation-card';card.innerHTML=`<div class="card-top"><div><h3>${d.item}</h3><p>${d.quantity||0} meals</p></div><span class="badge ${STATUS_CLASS[d.status]||'badge-posted'}">${d.status}</span></div><p>📍 ${d.location}</p><p>⏰ Safe until: ${new Date(d.expiry).toLocaleString()}</p>${d.recipient?`<div class="match-box">🎯 <b>Matched recipient:</b> ${d.recipient}</div>`:''}${d.driver?`<p>🚚 Driver: ${d.driver}</p>`:''}${d.pickupLat!=null&&d.status!=='Posted'?`<div class="route-info" id="route-${id}">Live route ready</div><div class="mini-map" id="map-${id}"></div>`:''}${action}`;list.appendChild(card);if(d.pickupLat!=null&&d.status!=='Posted')renderMap(id,d);});mealsCount.textContent=delivered;weightCount.textContent=Math.round(weight);co2Count.textContent=Math.round(weight*2.5);});
+const hasMap=d=>d.pickupLat!=null&&d.pickupLng!=null&&d.status!=='Posted';
+function actions(d,id){
+  if(d.status==='Posted')return `<button class="primary-btn" onclick="acceptDonation('${id}')">Accept &amp; auto-match</button>`;
+  if(d.status==='Accepted')return `<div class="location-row"><input type="text" id="driver-input-${id}" placeholder="Driver name"><button class="primary-btn inline-btn" onclick="assignDriver('${id}')">Assign driver</button></div>`;
+  if(d.status==='Dispatched')return `<button class="sharing-btn" onclick="toggleSharing('${id}',this)">${activeWatchers[id]?'🟢 Sharing live location — tap to stop':'📍 Start sharing live location'}</button><button class="primary-btn" onclick="markDelivered('${id}')">Mark as delivered</button>`;
+  return '';
+}
+const build=(d,id)=>`<div class="card-top"><div><h3>${esc(d.item)}</h3><p>${Number(d.quantity||0)} meals</p></div><span class="badge ${STATUS_CLASS[d.status]||'badge-posted'}">${esc(d.status)}</span></div><p>📍 ${esc(d.location)}</p><p>⏰ Safe until: ${new Date(d.expiry).toLocaleString()}</p>${d.recipient?`<div class="match-box">🎯 <b>Matched recipient:</b> ${esc(d.recipient)}</div>`:''}${d.driver?`<p>🚚 Driver: ${esc(d.driver)}</p>`:''}${hasMap(d)?`<div class="route-info" id="route-${id}">Live route ready</div><div class="mini-map" id="map-${id}"></div>`:''}${actions(d,id)}`;
+
+onSnapshot(q,snapshot=>{let delivered=0,weight=0;const items=[];
+  snapshot.forEach(ds=>{const d=ds.data(),id=ds.id;if(d.status==='Delivered'){delivered+=Number(d.quantity||0);weight+=Number(d.quantity||0)*.4;}
+    items.push({id,data:d,sig:[d.item,d.quantity,d.location,d.expiry,d.status,d.driver,d.recipient].join('|'),msig:hasMap(d)?`${d.driverLat}|${d.driverLng}`:null});});
+  syncCards(list,emptyEl,items,build,(d,id)=>drawMap(id,d));
+  countTo(document.getElementById('ngo-meals-count'),delivered);countTo(document.getElementById('ngo-weight-count'),Math.round(weight));countTo(document.getElementById('ngo-co2-count'),Math.round(weight*2.5));});
 
 window.acceptDonation=async id=>{const ref=doc(db,'donations',id);const snap=await new Promise(resolve=>{const unsub=onSnapshot(ref,s=>{unsub();resolve(s);});});const d=snap.data();const recipient=bestRecipient(d);await updateDoc(ref,{status:'Accepted',recipient:recipient?.name||'Manual recipient selection',recipientLat:recipient?.lat||null,recipientLng:recipient?.lng||null,matchDistanceKm:recipient?Number(recipient.distance.toFixed(2)):null});};
 window.assignDriver=async id=>{const input=document.getElementById(`driver-input-${id}`),name=input.value.trim();if(!name)return alert('Please enter a driver name.');await updateDoc(doc(db,'donations',id),{status:'Dispatched',driver:name});};
-window.toggleSharing=id=>{if(activeWatchers[id]){navigator.geolocation.clearWatch(activeWatchers[id]);delete activeWatchers[id];return;}if(!navigator.geolocation)return alert('Geolocation is not supported on this device.');const ref=doc(db,'donations',id);activeWatchers[id]=navigator.geolocation.watchPosition(async pos=>{await updateDoc(ref,{driverLat:pos.coords.latitude,driverLng:pos.coords.longitude});},err=>{alert('Could not get location: '+err.message);navigator.geolocation.clearWatch(activeWatchers[id]);delete activeWatchers[id];},{enableHighAccuracy:true,maximumAge:5000,timeout:10000});};
+const sharingLabel=on=>on?'🟢 Sharing live location — tap to stop':'📍 Start sharing live location';
+window.toggleSharing=(id,btn)=>{if(activeWatchers[id]){navigator.geolocation.clearWatch(activeWatchers[id]);delete activeWatchers[id];if(btn)btn.textContent=sharingLabel(false);return;}if(!navigator.geolocation)return alert('Geolocation is not supported on this device.');const ref=doc(db,'donations',id);activeWatchers[id]=navigator.geolocation.watchPosition(async pos=>{await updateDoc(ref,{driverLat:pos.coords.latitude,driverLng:pos.coords.longitude});},err=>{alert('Could not get location: '+err.message);navigator.geolocation.clearWatch(activeWatchers[id]);delete activeWatchers[id];},{enableHighAccuracy:true,maximumAge:5000,timeout:10000});if(btn)btn.textContent=sharingLabel(true);};
 window.markDelivered=async id=>{if(activeWatchers[id]){navigator.geolocation.clearWatch(activeWatchers[id]);delete activeWatchers[id];}await updateDoc(doc(db,'donations',id),{status:'Delivered'});};
