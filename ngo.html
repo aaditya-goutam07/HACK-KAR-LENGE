@@ -4,25 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Surplus-to-Shelter — NGO Dispatch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/[email protected]/dist/leaflet.css" />
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <header>
-    <h1>NGO / Shelter Dispatch</h1>
-    <p>Accept donations, assign drivers, track pickups.</p>
-    <nav><a href="index.html">← Donor view</a></nav>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">🏠</span>
+      <div>
+        <h1>NGO / Shelter Dispatch</h1>
+        <p>Accept donations, assign drivers, track pickups.</p>
+      </div>
+    </div>
+    <a class="pill-link" href="index.html">← Donor view</a>
   </header>
 
   <main>
-    <section id="list-section">
-      <h2>Incoming Donations (live)</h2>
+    <section class="card" id="list-section">
+      <h2>Incoming Donations <span class="live-dot"></span> Live</h2>
       <div id="ngo-donation-list"></div>
     </section>
 
-    <section id="dashboard-section">
+    <section class="card" id="dashboard-section">
       <h2>Impact So Far</h2>
-      <p>Meals Rescued: <span id="ngo-meals-count">0</span></p>
+      <div class="stat-row">
+        <div class="stat-box">
+          <span class="stat-number" id="ngo-meals-count">0</span>
+          <span class="stat-label">Meals Rescued</span>
+        </div>
+      </div>
     </section>
   </main>
 

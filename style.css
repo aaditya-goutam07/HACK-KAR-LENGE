@@ -2,87 +2,263 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
 }
 
 body {
-  background: #f5f5f5;
-  color: #222;
+  font-family: 'Inter', Arial, sans-serif;
+  background: #f4f6f5;
+  color: #1a1a1a;
+  line-height: 1.5;
 }
 
-header {
-  background: #2e7d32;
+/* ---------- Header ---------- */
+.topbar {
+  background: linear-gradient(135deg, #1b5e20, #2e7d32);
   color: white;
-  padding: 24px;
-  text-align: center;
+  padding: 22px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-icon {
+  font-size: 36px;
+}
+
+.topbar h1 {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.topbar p {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.pill-link {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.pill-link:hover {
+  background: rgba(255,255,255,0.28);
+}
+
+/* ---------- Layout ---------- */
 main {
-  max-width: 700px;
-  margin: 30px auto;
-  padding: 0 16px;
+  max-width: 720px;
+  margin: 28px auto;
+  padding: 0 16px 40px;
 }
 
-section {
+.card {
   background: white;
-  border-radius: 8px;
-  padding: 20px;
+  border-radius: 12px;
+  padding: 22px;
   margin-bottom: 20px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.08);
 }
 
+.card h2 {
+  font-size: 17px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  display: inline-block;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+  70% { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+
+/* ---------- Form ---------- */
 form input {
   width: 100%;
-  padding: 10px;
+  padding: 11px 12px;
   margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid #dcdfe2;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
 }
 
-form button {
+form input:focus {
+  outline: none;
+  border-color: #2e7d32;
+}
+
+.location-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.location-row input {
+  margin-bottom: 0;
+  flex: 1;
+  min-width: 140px;
+}
+
+.location-status {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+#get-location-btn {
+  background: #eef2f0;
+  color: #1b5e20;
+  border: 1px solid #d3dcd6;
+  padding: 9px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#get-location-btn:hover {
+  background: #e2e9e4;
+}
+
+.primary-btn {
   width: 100%;
-  padding: 10px;
+  padding: 11px;
   background: #2e7d32;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.15s;
 }
 
-form button:hover {
+.primary-btn:hover {
   background: #256428;
 }
 
+.sharing-btn {
+  width: 100%;
+  padding: 11px;
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* ---------- Donation cards ---------- */
 .donation-card {
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 12px;
-  margin-bottom: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 6px;
 }
 
 .donation-card h3 {
-  color: #2e7d32;
+  font-size: 15px;
+  font-weight: 600;
 }
 
-.donation-card button {
-  margin-top: 8px;
-  width: auto;
-  padding: 8px 14px;
+.donation-card p {
+  font-size: 13px;
+  color: #4b5563;
+  margin-top: 2px;
 }
 
-.donation-card input {
-  width: auto;
-  display: inline-block;
-  margin-right: 8px;
-}
-
-header nav {
+.donation-card .primary-btn,
+.donation-card .sharing-btn {
   margin-top: 10px;
 }
 
-header nav a {
-  color: white;
-  text-decoration: underline;
-  font-weight: bold;
+/* ---------- Status badges ---------- */
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.badge-posted { background: #f1f5f9; color: #475569; }
+.badge-accepted { background: #dbeafe; color: #1d4ed8; }
+.badge-dispatched { background: #fef3c7; color: #b45309; }
+.badge-delivered { background: #dcfce7; color: #15803d; }
+
+/* ---------- Map ---------- */
+.mini-map {
+  height: 200px;
+  border-radius: 8px;
+  margin-top: 10px;
+  border: 1px solid #e5e7eb;
+  z-index: 0;
+}
+
+/* ---------- Dashboard ---------- */
+.stat-row {
+  display: flex;
+  gap: 16px;
+}
+
+.stat-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 16px 20px;
+  text-align: center;
+  flex: 1;
+}
+
+.stat-number {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  color: #15803d;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #4b5563;
 }

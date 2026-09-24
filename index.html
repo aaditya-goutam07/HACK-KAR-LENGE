@@ -4,38 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Surplus-to-Shelter — Donor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/[email protected]/dist/leaflet.css" />
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <header>
-    <h1>Surplus-to-Shelter</h1>
-    <p>Turn unsold food into someone's next meal.</p>
-    <nav><a href="ngo.html">NGO / Shelter view →</a></nav>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">🍲</span>
+      <div>
+        <h1>Surplus-to-Shelter</h1>
+        <p>Turn unsold food into someone's next meal.</p>
+      </div>
+    </div>
+    <a class="pill-link" href="ngo.html">NGO / Shelter view →</a>
   </header>
 
   <main>
-    <!-- Donation Form -->
-    <section id="donate-section">
+    <section class="card" id="donate-section">
       <h2>Post a Donation</h2>
       <form id="donation-form">
         <input type="text" id="food-item" placeholder="Food item (e.g. Pasta, 20 servings)" required>
-        <input type="text" id="location" placeholder="Pickup location" required>
+        <input type="text" id="location" placeholder="Pickup location (address / landmark)" required>
+
+        <div class="location-row">
+          <button type="button" id="get-location-btn">📍 Use My Current Location</button>
+          <span id="location-status" class="location-status">Location not set (optional, but enables map tracking)</span>
+        </div>
+
         <input type="datetime-local" id="expiry" required>
-        <button type="submit">Post Donation</button>
+        <button type="submit" class="primary-btn">Post Donation</button>
       </form>
     </section>
 
-    <!-- Donation List -->
-    <section id="list-section">
-      <h2>All Donations (live)</h2>
+    <section class="card" id="list-section">
+      <h2>All Donations <span class="live-dot"></span> Live</h2>
       <div id="donation-list"></div>
     </section>
 
-    <!-- Impact Dashboard -->
-    <section id="dashboard-section">
+    <section class="card" id="dashboard-section">
       <h2>Impact So Far</h2>
-      <p>Meals Rescued: <span id="meals-count">0</span></p>
+      <div class="stat-row">
+        <div class="stat-box">
+          <span class="stat-number" id="meals-count">0</span>
+          <span class="stat-label">Meals Rescued</span>
+        </div>
+      </div>
     </section>
   </main>
 
