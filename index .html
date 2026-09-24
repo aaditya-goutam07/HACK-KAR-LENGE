@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surplus-to-Shelter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Surplus-to-Shelter</h1>
+    <p>Turn unsold food into someone's next meal.</p>
+  </header>
+
+  <main>
+    <!-- Donation Form -->
+    <section id="donate-section">
+      <h2>Post a Donation</h2>
+      <form id="donation-form">
+        <input type="text" id="food-item" placeholder="Food item (e.g. Pasta, 20 servings)" required>
+        <input type="text" id="location" placeholder="Pickup location" required>
+        <input type="datetime-local" id="expiry" required>
+        <button type="submit">Post Donation</button>
+      </form>
+    </section>
+
+    <!-- Donation List -->
+    <section id="list-section">
+      <h2>Available Donations</h2>
+      <div id="donation-list"></div>
+    </section>
+
+    <!-- Impact Dashboard -->
+    <section id="dashboard-section">
+      <h2>Impact So Far</h2>
+      <p>Meals Rescued: <span id="meals-count">0</span></p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
